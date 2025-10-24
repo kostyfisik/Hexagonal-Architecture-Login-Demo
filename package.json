@@ -1,0 +1,26 @@
+{
+  "name": "hexagonal-login-demo",
+  "version": "1.0.0",
+  "description": "A minimalistic teaching project demonstrating hexagonal architecture with login functionality",
+  "main": "dist/App.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "npx serve .",
+    "test": "node run-tests.cjs",
+    "test:browser": "echo \"Open test.html in browser to run tests\" && exit 0"
+  },
+  "keywords": [
+    "hexagonal-architecture",
+    "login",
+    "typescript",
+    "demo"
+  ],
+  "author": "Senior Frontend Developer",
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "serve": "^14.2.5",
+    "typescript": "^5.9.3"
+  }
+}

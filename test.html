@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthUsecase Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #testOutput {
+            background-color: #000;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>AuthUsecase Unit Tests</h1>
+        <button id="runTests">Run Tests</button>
+        <div id="testOutput">Click "Run Tests" to execute unit tests...</div>
+    </div>
+
+    <script type="module">
+        import { testAuthUsecase } from './AuthUsecase.test.js';
+
+        const runButton = document.getElementById('runTests');
+        const outputDiv = document.getElementById('testOutput');
+
+        runButton.addEventListener('click', async () => {
+            outputDiv.innerHTML = 'Running tests...\n';
+
+            // Capture console.log output
+            const originalLog = console.log;
+            console.log = function (...args) {
+                outputDiv.innerHTML += args.join(' ') + '\n';
+                originalLog.apply(console, args);
+            };
+
+            try {
+                await testAuthUsecase();
+            } catch (error) {
+                outputDiv.innerHTML += `\nError running tests: ${error.message}\n`;
+            } finally {
+                // Restore original console.log
+                console.log = originalLog;
+            }
+        });
+    </script>
+</body>
+
+</html>
