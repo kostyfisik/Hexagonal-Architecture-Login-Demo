@@ -1,5 +1,3 @@
-import { User } from './User.js';
-
 /**
  * Authentication result interface
  */

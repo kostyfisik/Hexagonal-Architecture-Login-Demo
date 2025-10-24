@@ -52,14 +52,6 @@ Run tests in the console:
 npm test
 ```
 
-### Browser Tests
-1. Start the web server:
-   ```
-   npm start
-   ```
-
-2. Open your browser and navigate to http://localhost:3000/test.html
-
 ## Testing
 
 The unit tests in [AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/AuthUsecase.test.ts) verify that:

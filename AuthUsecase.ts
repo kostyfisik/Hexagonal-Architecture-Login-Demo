@@ -1,5 +1,4 @@
 import { AuthPort, AuthCredentials } from './AuthPort.js';
-import { User } from './User.js';
 import { AuthResult, STORAGE_KEYS } from './types.js';
 
 export class AuthUsecase<T extends AuthCredentials> {
