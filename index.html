@@ -167,56 +167,82 @@
 
         // Event listeners
         loginBtn.addEventListener('click', async () => {
+            console.log('[UI] Password Login button clicked');
+            
             const username = usernameInput.value;
             const password = passwordInput.value;
+            
+            console.log(`[UI] Attempting login with username: ${username}`);
 
             if (!username || !password) {
+                console.log('[UI] Login failed - missing username or password');
                 showError('Please enter both username and password');
                 return;
             }
 
             try {
+                console.log('[UI] Calling app.pwdLogin');
                 const result = await app.pwdLogin(username, password);
+                console.log('[UI] Received password login result:', result);
+                
                 if (result.success) {
+                    console.log('[UI] Password login successful, showing success message');
                     showSuccess(result.userId);
                 } else {
+                    console.log('[UI] Password login failed, showing error message:', result.error);
                     showError(result.error);
                 }
             } catch (error) {
+                console.error('[UI] Unexpected error during password login:', error);
                 showError('An unexpected error occurred');
             }
         });
 
         googleLoginBtn.addEventListener('click', async () => {
+            console.log('[UI] Google Login button clicked');
+            
             // Show loading state
             googleLoginBtn.disabled = true;
             googleLoginBtn.textContent = 'Redirecting...';
+            console.log('[UI] Button disabled and text changed to "Redirecting..."');
             
             try {
+                console.log('[UI] Calling app.oauthLogin for Google');
                 const result = await app.oauthLogin('google');
+                console.log('[UI] Received OAuth login result:', result);
+                
                 if (result.success) {
+                    console.log('[UI] OAuth login successful, showing success message');
                     showSuccess(result.userId);
                 } else {
+                    console.log('[UI] OAuth login failed, showing error message:', result.error);
                     showError(result.error);
                 }
             } catch (error) {
+                console.error('[UI] Unexpected error during OAuth login:', error);
                 showError('An unexpected error occurred during OAuth');
             } finally {
                 // Reset button state
                 googleLoginBtn.disabled = false;
                 googleLoginBtn.textContent = 'Login with Google';
+                console.log('[UI] Button state reset to normal');
             }
         });
 
         logoutBtn.addEventListener('click', () => {
+            console.log('[UI] Logout button clicked');
             app.logout();
             showLoginForm();
+            console.log('[UI] User logged out and login form shown');
         });
 
         // Check if user is already logged in
         const currentUserId = app.getCurrentUserId();
         if (currentUserId) {
+            console.log('[UI] User already logged in, showing success message');
             showSuccess(currentUserId);
+        } else {
+            console.log('[UI] No user currently logged in');
         }
     </script>
 </body>
