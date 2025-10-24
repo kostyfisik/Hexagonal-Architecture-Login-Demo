@@ -9,19 +9,14 @@ export interface PwdCredentials extends AuthCredentials {
 
 export class PwdAdapter implements AuthPort<PwdCredentials> {
   async authenticate(credentials: PwdCredentials): Promise<User | null> {
-    console.log('[PwdAdapter] Authenticating with credentials:', credentials);
     
     if (credentials.username === MOCK_CREDENTIALS.USERNAME && credentials.password === MOCK_CREDENTIALS.PASSWORD) {
-      console.log('[PwdAdapter] Valid credentials provided, returning mock user');
-      
       return {
         id: 'user-123',
         username: credentials.username,
         email: `${credentials.username}@example.com`
       };
     }
-    
-    console.log('[PwdAdapter] Invalid credentials provided, authentication failed');
     
     await new Promise(resolve => setTimeout(resolve, 500));
     
