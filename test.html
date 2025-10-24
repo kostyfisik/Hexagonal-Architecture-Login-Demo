@@ -62,7 +62,7 @@
     </div>
 
     <script type="module">
-        import { testAuthUsecase } from './AuthUsecase.test.js';
+        import { testAuthUsecase } from './dist/browser-test.js';
 
         const runButton = document.getElementById('runTests');
         const outputDiv = document.getElementById('testOutput');
@@ -70,20 +70,11 @@
         runButton.addEventListener('click', async () => {
             outputDiv.innerHTML = 'Running tests...\n';
 
-            // Capture console.log output
-            const originalLog = console.log;
-            console.log = function (...args) {
-                outputDiv.innerHTML += args.join(' ') + '\n';
-                originalLog.apply(console, args);
-            };
-
             try {
-                await testAuthUsecase();
+                const results = await testAuthUsecase();
+                outputDiv.innerHTML = results.join('\n');
             } catch (error) {
-                outputDiv.innerHTML += `\nError running tests: ${error.message}\n`;
-            } finally {
-                // Restore original console.log
-                console.log = originalLog;
+                outputDiv.innerHTML += `\nError running tests: ${error.message}\n${error.stack}\n`;
             }
         });
     </script>
