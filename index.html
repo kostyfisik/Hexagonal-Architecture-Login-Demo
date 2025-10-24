@@ -188,6 +188,10 @@
         });
 
         googleLoginBtn.addEventListener('click', async () => {
+            // Show loading state
+            googleLoginBtn.disabled = true;
+            googleLoginBtn.textContent = 'Redirecting...';
+            
             try {
                 const result = await app.oauthLogin('google');
                 if (result.success) {
@@ -197,6 +201,10 @@
                 }
             } catch (error) {
                 showError('An unexpected error occurred during OAuth');
+            } finally {
+                // Reset button state
+                googleLoginBtn.disabled = false;
+                googleLoginBtn.textContent = 'Login with Google';
             }
         });
 
