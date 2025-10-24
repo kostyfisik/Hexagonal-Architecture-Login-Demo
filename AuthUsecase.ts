@@ -1,12 +1,13 @@
 import { AuthPort, AuthCredentials } from './AuthPort.js';
 import { User } from './User.js';
+import { AuthResult, STORAGE_KEYS } from './types.js';
 
 export class AuthUsecase<T extends AuthCredentials> {
   constructor(private authAdapter: AuthPort<T>) {
     console.log('[AuthUsecase] Created with auth adapter:', authAdapter.constructor.name);
   }
   
-  async login(credentials: T): Promise<{ success: boolean; userId?: string; error?: string }> {
+  async login(credentials: T): Promise<AuthResult> {
     console.log('[AuthUsecase] Login initiated with credentials:', credentials);
     
     try {
@@ -16,7 +17,7 @@ export class AuthUsecase<T extends AuthCredentials> {
       if (user) {
         console.log('[AuthUsecase] Authentication successful, saving user ID to localStorage');
         
-        localStorage.setItem('userId', user.id);
+        localStorage.setItem(STORAGE_KEYS.USER_ID, user.id);
         console.log('[AuthUsecase] User ID saved to localStorage:', user.id);
         
         return { success: true, userId: user.id };
@@ -32,13 +33,13 @@ export class AuthUsecase<T extends AuthCredentials> {
   
   logout(): void {
     console.log('[AuthUsecase] Logout initiated');
-    localStorage.removeItem('userId');
+    localStorage.removeItem(STORAGE_KEYS.USER_ID);
     console.log('[AuthUsecase] User ID removed from localStorage');
   }
   
   getCurrentUserId(): string | null {
     console.log('[AuthUsecase] Getting current user ID from localStorage');
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem(STORAGE_KEYS.USER_ID);
     console.log('[AuthUsecase] Current user ID:', userId);
     return userId;
   }

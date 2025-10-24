@@ -1,11 +1,13 @@
 import { AuthUsecase } from './AuthUsecase.js';
 import { PwdAdapter, PwdCredentials } from './PwdAdapter.js';
 import { OAuthAdapter, OAuthCredentials } from './OAuthAdapter.js';
+import { AuthResult } from './types.js';
 
 export class App {
   private pwdUsecase: AuthUsecase<PwdCredentials>;
   private oauthUsecase: AuthUsecase<OAuthCredentials>;
   private oauthAdapter: OAuthAdapter;
+  private oauthPromiseResolver: ((result: AuthResult) => void) | null = null;
   
   constructor() {
     console.log('[App] Initializing application with hexagonal architecture');
@@ -14,10 +16,16 @@ export class App {
     this.oauthAdapter = new OAuthAdapter();
     this.oauthUsecase = new AuthUsecase<OAuthCredentials>(this.oauthAdapter);
     
+    // Set up the OAuth callback
+    this.oauthAdapter.setOAuthCallback((provider, token) => {
+      console.log(`[App] Received OAuth callback for ${provider} with token: ${token}`);
+      this.handleOAuthCallback(provider, token);
+    });
+    
     console.log('[App] Application initialized successfully');
   }
   
-  async pwdLogin(username: string, password: string): Promise<{ success: boolean; userId?: string; error?: string }> {
+  async pwdLogin(username: string, password: string): Promise<AuthResult> {
     console.log(`[App] Attempting password login for user: ${username}`);
     
     const credentials: PwdCredentials = { username, password };
@@ -27,7 +35,7 @@ export class App {
     return result;
   }
   
-  async oauthLogin(provider: string): Promise<{ success: boolean; userId?: string; error?: string }> {
+  async oauthLogin(provider: string): Promise<AuthResult> {
     console.log(`[App] Starting OAuth login process for provider: ${provider}`);
     
     console.log(`[App] Calling OAuth adapter to initiate flow for ${provider}`);
@@ -35,27 +43,27 @@ export class App {
     
     console.log('[App] Setting up promise to wait for OAuth callback');
     
+    // Return a promise that will be resolved when the OAuth callback is received
     return new Promise((resolve) => {
-      const callbackHandler = (event: CustomEvent) => {
-        console.log('[App] Received OAuth callback event:', event.detail);
-        
-        window.removeEventListener('oauthCallback', callbackHandler as EventListener);
-        
-        const { provider: callbackProvider, token } = event.detail;
-        console.log(`[App] Processing OAuth callback for ${callbackProvider} with token: ${token}`);
-        
-        const credentials: OAuthCredentials = { provider: callbackProvider, token };
-        
-        console.log('[App] Calling OAuth usecase to complete authentication');
-        this.oauthUsecase.login(credentials).then((result) => {
-          console.log('[App] OAuth login completed with result:', result);
-          resolve(result);
-        });
-      };
-      
-      console.log('[App] Adding event listener for oauthCallback event');
-      window.addEventListener('oauthCallback', callbackHandler as EventListener);
+      this.oauthPromiseResolver = resolve;
     });
+  }
+  
+  private async handleOAuthCallback(provider: string, token: string): Promise<void> {
+    console.log(`[App] Processing OAuth callback for ${provider} with token: ${token}`);
+    
+    const credentials: OAuthCredentials = { provider, token };
+    
+    console.log('[App] Calling OAuth usecase to complete authentication');
+    const result = await this.oauthUsecase.login(credentials);
+    console.log('[App] OAuth login completed with result:', result);
+    
+    // Resolve the pending promise if one exists
+    if (this.oauthPromiseResolver) {
+      console.log('[App] Resolving pending OAuth promise');
+      this.oauthPromiseResolver(result);
+      this.oauthPromiseResolver = null;
+    }
   }
   
   logout(): void {

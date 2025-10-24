@@ -1,6 +1,7 @@
 import { AuthUsecase } from './AuthUsecase.js';
 import { AuthPort, AuthCredentials } from './AuthPort.js';
 import { User } from './User.js';
+import { AuthResult } from './types.js';
 
 class MockAuthAdapter implements AuthPort<AuthCredentials> {
   private shouldSucceed: boolean;
@@ -29,7 +30,7 @@ async function testAuthUsecase() {
   const successAdapter = new MockAuthAdapter(true);
   const successUsecase = new AuthUsecase<AuthCredentials>(successAdapter);
   
-  const successResult = await successUsecase.login({ username: 'test', password: 'pass' });
+  const successResult: AuthResult = await successUsecase.login({ username: 'test', password: 'pass' });
   console.log('Login result:', successResult);
   console.log('User ID in localStorage:', localStorage.getItem('userId'));
   
@@ -44,7 +45,7 @@ async function testAuthUsecase() {
   const failAdapter = new MockAuthAdapter(false);
   const failUsecase = new AuthUsecase<AuthCredentials>(failAdapter);
   
-  const failResult = await failUsecase.login({ username: 'invalid', password: 'wrong' });
+  const failResult: AuthResult = await failUsecase.login({ username: 'invalid', password: 'wrong' });
   console.log('Login result:', failResult);
   console.log('User ID in localStorage:', localStorage.getItem('userId'));
   

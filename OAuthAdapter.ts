@@ -1,5 +1,6 @@
 import { AuthPort, AuthCredentials } from './AuthPort.js';
 import { User } from './User.js';
+import { MOCK_CREDENTIALS } from './types.js';
 
 export interface OAuthCredentials extends AuthCredentials {
   provider: string;
@@ -8,6 +9,7 @@ export interface OAuthCredentials extends AuthCredentials {
 
 export class OAuthAdapter implements AuthPort<OAuthCredentials> {
   private callbackUrl: string;
+  private oauthCallback?: (provider: string, token: string) => void;
   
   constructor() {
     this.callbackUrl = window.location.origin + window.location.pathname + '?oauth_callback=1';
@@ -16,7 +18,7 @@ export class OAuthAdapter implements AuthPort<OAuthCredentials> {
   async authenticate(credentials: OAuthCredentials): Promise<User | null> {
     console.log('[OAuthAdapter] Authenticating with credentials:', credentials);
     
-    if (credentials.provider === 'google' && credentials.token === 'valid-google-token') {
+    if (credentials.provider === 'google' && credentials.token === MOCK_CREDENTIALS.GOOGLE_TOKEN) {
       console.log('[OAuthAdapter] Valid Google token received, proceeding with authentication');
       
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -32,6 +34,13 @@ export class OAuthAdapter implements AuthPort<OAuthCredentials> {
     
     console.log('[OAuthAdapter] Authentication failed - invalid provider or token');
     return null;
+  }
+  
+  /**
+   * Set the callback function to be called when OAuth flow completes
+   */
+  setOAuthCallback(callback: (provider: string, token: string) => void): void {
+    this.oauthCallback = callback;
   }
   
   initiateOAuthFlow(provider: string): void {
@@ -50,16 +59,13 @@ export class OAuthAdapter implements AuthPort<OAuthCredentials> {
   private simulateOAuthCallback(provider: string): void {
     console.log(`[OAuthAdapter] Simulating OAuth callback for ${provider}`);
     
-    const event = new CustomEvent('oauthCallback', {
-      detail: {
-        provider: provider,
-        token: 'valid-google-token'
-      }
-    });
-    
-    console.log('[OAuthAdapter] Dispatching oauthCallback event with token');
-    
-    window.dispatchEvent(event);
+    // Call the registered callback if available
+    if (this.oauthCallback) {
+      console.log('[OAuthAdapter] Calling registered OAuth callback');
+      this.oauthCallback(provider, MOCK_CREDENTIALS.GOOGLE_TOKEN);
+    } else {
+      console.log('[OAuthAdapter] No OAuth callback registered');
+    }
   }
   
   getCallbackUrl(): string {

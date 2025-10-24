@@ -1,5 +1,6 @@
 import { AuthPort, AuthCredentials } from './AuthPort.js';
 import { User } from './User.js';
+import { MOCK_CREDENTIALS } from './types.js';
 
 export interface PwdCredentials extends AuthCredentials {
   username: string;
@@ -10,7 +11,7 @@ export class PwdAdapter implements AuthPort<PwdCredentials> {
   async authenticate(credentials: PwdCredentials): Promise<User | null> {
     console.log('[PwdAdapter] Authenticating with credentials:', credentials);
     
-    if (credentials.username === 'admin' && credentials.password === 'password') {
+    if (credentials.username === MOCK_CREDENTIALS.USERNAME && credentials.password === MOCK_CREDENTIALS.PASSWORD) {
       console.log('[PwdAdapter] Valid credentials provided, returning mock user');
       
       return {
