@@ -1,12 +1,12 @@
-import { AuthPort } from './AuthPort.js';
+import { AuthPort, AuthCredentials } from './AuthPort.js';
 import { User } from './User.js';
 
-export class AuthUsecase {
-  constructor(private authAdapter: AuthPort) {
+export class AuthUsecase<T extends AuthCredentials> {
+  constructor(private authAdapter: AuthPort<T>) {
     console.log('[AuthUsecase] Created with auth adapter:', authAdapter.constructor.name);
   }
   
-  async login(credentials: any): Promise<{ success: boolean; userId?: string; error?: string }> {
+  async login(credentials: T): Promise<{ success: boolean; userId?: string; error?: string }> {
     console.log('[AuthUsecase] Login initiated with credentials:', credentials);
     
     try {
@@ -16,7 +16,6 @@ export class AuthUsecase {
       if (user) {
         console.log('[AuthUsecase] Authentication successful, saving user ID to localStorage');
         
-        // Save user ID to localStorage on successful authentication
         localStorage.setItem('userId', user.id);
         console.log('[AuthUsecase] User ID saved to localStorage:', user.id);
         

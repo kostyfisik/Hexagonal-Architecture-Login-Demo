@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "npx serve .",
-    "test": "node run-tests.cjs",
+    "test": "npm run build && node run-tests.cjs",
     "test:browser": "echo \"Open test.html in browser to run tests\" && exit 0"
   },
   "keywords": [

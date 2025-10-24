@@ -1,5 +1,7 @@
 import { User } from './User.js';
 
-export interface AuthPort {
-  authenticate(credentials: any): Promise<User | null>;
+export interface AuthCredentials {}
+
+export interface AuthPort<T extends AuthCredentials = AuthCredentials> {
+  authenticate(credentials: T): Promise<User | null>;
 }
