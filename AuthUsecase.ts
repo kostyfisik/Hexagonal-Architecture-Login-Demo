@@ -3,9 +3,7 @@ import { User } from './User.js';
 import { AuthResult, STORAGE_KEYS } from './types.js';
 
 export class AuthUsecase<T extends AuthCredentials> {
-  constructor(private authAdapter: AuthPort<T>) {
-    // Constructor logging removed for brevity
-  }
+  constructor(private authAdapter: AuthPort<T>) {}
   
   async login(credentials: T): Promise<AuthResult> {
     console.log('[AuthUsecase] Login initiated');

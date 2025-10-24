@@ -36,7 +36,6 @@ export class App {
     
     this.oauthAdapter.initiateOAuthFlow(provider);
     
-    // Return a promise that will be resolved when the OAuth callback is received
     return new Promise((resolve) => {
       this.oauthPromiseResolver = resolve;
     });
@@ -46,7 +45,6 @@ export class App {
     const credentials: OAuthCredentials = { provider, token };
     const result = await this.oauthUsecase.login(credentials);
     
-    // Resolve the pending promise if one exists
     if (this.oauthPromiseResolver) {
       this.oauthPromiseResolver(result);
       this.oauthPromiseResolver = null;

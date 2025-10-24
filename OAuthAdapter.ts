@@ -46,7 +46,6 @@ export class OAuthAdapter implements AuthPort<OAuthCredentials> {
   }
   
   private simulateOAuthCallback(provider: string): void {
-    // Call the registered callback if available
     if (this.oauthCallback) {
       this.oauthCallback(provider, MOCK_CREDENTIALS.GOOGLE_TOKEN);
     }
