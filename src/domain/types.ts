@@ -8,6 +8,14 @@ export interface AuthResult {
 }
 
 /**
+ * OAuth provider enum
+ */
+export enum AuthProvider {
+  GOOGLE = 'google',
+  GITHUB = 'github'
+}
+
+/**
  * Storage constants
  */
 export const STORAGE_KEYS = {

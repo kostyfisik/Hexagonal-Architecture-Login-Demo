@@ -130,7 +130,7 @@
     </div>
 
     <script type="module">
-        import { App } from './dist/App.js';
+        import { App, AuthProvider } from './dist/App.js';
 
         // Initialize the app
         const app = new App();
@@ -197,7 +197,7 @@
             googleLoginBtn.textContent = 'Redirecting...';
 
             try {
-                const result = await app.oauthLogin('google');
+                const result = await app.oauthLogin(AuthProvider.GOOGLE);
 
                 if (result.success) {
                     showSuccess(result.userId);

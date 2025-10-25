@@ -2,7 +2,10 @@ import { AuthUsecase } from './src/app/AuthUsecase.js';
 import { PwdAdapter, PwdCredentials } from './src/adapters/PwdAdapter.js';
 import { OAuthAdapter, OAuthCredentials } from './src/adapters/OAuthAdapter.js';
 import { LocalStorageAdapter } from './src/adapters/LocalStorageAdapter.js';
-import { AuthResult } from './src/domain/types.js';
+import { AuthResult, AuthProvider } from './src/domain/types.js';
+
+// Re-export AuthProvider for browser usage
+export { AuthProvider };
 
 export class App {
   private authUsecase: AuthUsecase;
@@ -27,7 +30,7 @@ export class App {
     return result;
   }
   
-  async oauthLogin(provider: string): Promise<AuthResult> {
+  async oauthLogin(provider: AuthProvider): Promise<AuthResult> {
     console.log(`[App] Starting OAuth login process for provider: ${provider}`);
     
     const credentials: OAuthCredentials = { provider };

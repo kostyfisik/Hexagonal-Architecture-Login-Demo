@@ -1,9 +1,9 @@
 import { AuthPort, AuthCredentials } from '../domain/ports/AuthPort.js';
 import { User } from '../domain/model/User.js';
-import { MOCK_CREDENTIALS } from '../domain/types.js';
+import { MOCK_CREDENTIALS, AuthProvider } from '../domain/types.js';
 
 export interface OAuthCredentials extends AuthCredentials {
-  provider: string;
+  provider: AuthProvider;
   token?: string;
 }
 
@@ -23,7 +23,7 @@ export class OAuthAdapter implements AuthPort<OAuthCredentials> {
         const token = MOCK_CREDENTIALS.GOOGLE_TOKEN;
 
         // 3. Simulate validating the token and getting user info
-        if (credentials.provider === 'google' && token) {
+        if (credentials.provider === AuthProvider.GOOGLE && token) {
           const user: User = {
             id: 'oauth-user-456',
             username: 'oauthuser',
