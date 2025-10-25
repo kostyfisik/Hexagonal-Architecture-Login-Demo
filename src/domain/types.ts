@@ -1,11 +1,19 @@
 /**
- * Authentication result interface
+ * Authentication result discriminated union
+ * This pattern makes invalid states unrepresentable
  */
-export interface AuthResult {
-  success: boolean;
-  userId?: string;
-  error?: string;
-}
+
+type SuccessAuthResult = {
+  success: true;
+  userId: string;
+};
+
+type ErrorAuthResult = {
+  success: false;
+  error: string;
+};
+
+export type AuthResult = SuccessAuthResult | ErrorAuthResult;
 
 /**
  * OAuth provider enum

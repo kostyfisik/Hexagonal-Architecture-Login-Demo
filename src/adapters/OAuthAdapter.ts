@@ -8,14 +8,9 @@ export interface OAuthCredentials extends AuthCredentials {
 }
 
 export class OAuthAdapter implements AuthPort<OAuthCredentials> {
-  constructor() {
-    // Constructor simplified as callbackUrl and oauthCallback are no longer needed
-  }
-  
   async authenticate(credentials: OAuthCredentials): Promise<User | null> {
     console.log(`[OAuthAdapter] Initiating OAuth flow for ${credentials.provider}`);
     
-    // This promise now wraps the entire simulated flow
     return new Promise((resolve) => {
       // 1. Simulate redirecting to the provider
       setTimeout(() => {
@@ -36,8 +31,4 @@ export class OAuthAdapter implements AuthPort<OAuthCredentials> {
       }, 1000);
     });
   }
-  
-
-  
-
 }

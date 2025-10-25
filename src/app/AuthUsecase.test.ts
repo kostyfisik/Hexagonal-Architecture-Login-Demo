@@ -57,7 +57,9 @@ describe('AuthUsecase', () => {
     const result: AuthResult = await authUsecase.login(successAdapter, { username: 'test', password: 'pass' });
     
     expect(result.success).toBe(true);
-    expect(result.userId).toBe('test-user-789');
+    if (result.success) {
+      expect(result.userId).toBe('test-user-789');
+    }
     expect(mockStorage.getItem('userId')).toBe('test-user-789');
   });
 
@@ -65,7 +67,9 @@ describe('AuthUsecase', () => {
     const result: AuthResult = await authUsecase.login(failAdapter, { username: 'invalid', password: 'wrong' });
     
     expect(result.success).toBe(false);
-    expect(result.userId).toBeUndefined();
+    if (!result.success) {
+      expect(result.error).toBe('Invalid credentials');
+    }
     expect(mockStorage.getItem('userId')).toBeNull();
   });
 
