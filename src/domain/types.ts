@@ -38,3 +38,13 @@ export const MOCK_CREDENTIALS = {
   PASSWORD: 'password',
   GOOGLE_TOKEN: 'valid-google-token'
 } as const;
+
+/**
+ * Application events for UI state management
+ */
+export interface AppEvents {
+  loginSuccess: { userId: string };
+  loginError: { error: string };
+  logout: void;
+  authStateChanged: { isAuthenticated: boolean; userId: string | null };
+}

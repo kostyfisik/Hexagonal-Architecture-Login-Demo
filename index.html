@@ -130,10 +130,7 @@
     </div>
 
     <script type="module">
-        import { App, AuthProvider } from './App.ts';
-
-        // Initialize the app
-        const app = new App();
+        import { app, AuthProvider } from './src/main.js';
 
         // DOM Elements
         const loginForm = document.getElementById('loginForm');
@@ -167,7 +164,28 @@
             errorMessage.classList.add('hidden');
         }
 
-        // Event listeners
+        // Subscribe to application events
+        app.on('loginSuccess', ({ userId }) => {
+            console.log('[UI] Login successful event received:', userId);
+            showSuccess(userId);
+        });
+
+        app.on('loginError', ({ error }) => {
+            console.log('[UI] Login error event received:', error);
+            showError(error);
+        });
+
+        app.on('logout', () => {
+            console.log('[UI] Logout event received');
+            showLoginForm();
+        });
+
+        app.on('authStateChanged', ({ isAuthenticated, userId }) => {
+            console.log('[UI] Auth state changed:', { isAuthenticated, userId });
+            // You can use this for more complex state synchronization
+        });
+
+        // Event listeners for user interactions
         loginBtn.addEventListener('click', async () => {
             const username = usernameInput.value;
             const password = passwordInput.value;
@@ -178,13 +196,8 @@
             }
 
             try {
-                const result = await app.pwdLogin(username, password);
-
-                if (result.success) {
-                    showSuccess(result.userId);
-                } else {
-                    showError(result.error);
-                }
+                // Just call the method - events will handle the UI updates
+                await app.pwdLogin(username, password);
             } catch (error) {
                 console.error('[UI] Unexpected error during password login:', error);
                 showError('An unexpected error occurred');
@@ -197,13 +210,8 @@
             googleLoginBtn.textContent = 'Redirecting...';
 
             try {
-                const result = await app.oauthLogin(AuthProvider.GOOGLE);
-
-                if (result.success) {
-                    showSuccess(result.userId);
-                } else {
-                    showError(result.error);
-                }
+                // Just call the method - events will handle the UI updates
+                await app.oauthLogin(AuthProvider.GOOGLE);
             } catch (error) {
                 console.error('[UI] Unexpected error during OAuth login:', error);
                 showError('An unexpected error occurred during OAuth');
@@ -215,11 +223,11 @@
         });
 
         logoutBtn.addEventListener('click', () => {
+            // Just call the method - events will handle the UI updates
             app.logout();
-            showLoginForm();
         });
 
-        // Check if user is already logged in
+        // Check if user is already logged in on page load
         const currentUserId = app.getCurrentUserId();
         if (currentUserId) {
             showSuccess(currentUserId);
