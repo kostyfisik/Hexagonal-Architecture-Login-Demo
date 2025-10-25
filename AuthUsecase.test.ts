@@ -45,9 +45,9 @@ async function testAuthUsecase() {
   console.log('\nTest 1: Successful authentication');
   const mockStorage = new MockStorageAdapter();
   const successAdapter = new MockAuthAdapter(true);
-  const successUsecase = new AuthUsecase<AuthCredentials>(successAdapter, mockStorage);
+  const successUsecase = new AuthUsecase(mockStorage);
   
-  const successResult: AuthResult = await successUsecase.login({ username: 'test', password: 'pass' });
+  const successResult: AuthResult = await successUsecase.login(successAdapter, { username: 'test', password: 'pass' });
   console.log('Login result:', successResult);
   console.log('User ID in storage:', mockStorage.getItem('userId'));
   
@@ -60,9 +60,9 @@ async function testAuthUsecase() {
   console.log('\nTest 2: Failed authentication');
   const failAdapter = new MockAuthAdapter(false);
   const failStorage = new MockStorageAdapter();
-  const failUsecase = new AuthUsecase<AuthCredentials>(failAdapter, failStorage);
+  const failUsecase = new AuthUsecase(failStorage);
   
-  const failResult: AuthResult = await failUsecase.login({ username: 'invalid', password: 'wrong' });
+  const failResult: AuthResult = await failUsecase.login(failAdapter, { username: 'invalid', password: 'wrong' });
   console.log('Login result:', failResult);
   console.log('User ID in storage:', failStorage.getItem('userId'));
   
@@ -74,8 +74,8 @@ async function testAuthUsecase() {
   
   console.log('\nTest 3: Logout functionality');
   const logoutStorage = new MockStorageAdapter();
-  const logoutUsecase = new AuthUsecase<AuthCredentials>(successAdapter, logoutStorage);
-  await logoutUsecase.login({ username: 'test', password: 'pass' });
+  const logoutUsecase = new AuthUsecase(logoutStorage);
+  await logoutUsecase.login(successAdapter, { username: 'test', password: 'pass' });
   console.log('User ID after login:', logoutStorage.getItem('userId'));
   
   logoutUsecase.logout();
@@ -89,8 +89,8 @@ async function testAuthUsecase() {
   
   console.log('\nTest 4: getCurrentUserId functionality');
   const currentUserIdStorage = new MockStorageAdapter();
-  const currentUserIdUsecase = new AuthUsecase<AuthCredentials>(successAdapter, currentUserIdStorage);
-  await currentUserIdUsecase.login({ username: 'test', password: 'pass' });
+  const currentUserIdUsecase = new AuthUsecase(currentUserIdStorage);
+  await currentUserIdUsecase.login(successAdapter, { username: 'test', password: 'pass' });
   
   const currentUserId = currentUserIdUsecase.getCurrentUserId();
   console.log('Current user ID:', currentUserId);

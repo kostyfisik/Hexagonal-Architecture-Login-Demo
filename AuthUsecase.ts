@@ -2,17 +2,14 @@ import { AuthPort, AuthCredentials } from './AuthPort.js';
 import { StoragePort } from './StoragePort.js';
 import { AuthResult, STORAGE_KEYS } from './types.js';
 
-export class AuthUsecase<T extends AuthCredentials> {
-  constructor(
-    private authAdapter: AuthPort<T>,
-    private storageAdapter: StoragePort
-  ) {}
+export class AuthUsecase {
+  constructor(private storageAdapter: StoragePort) {}
   
-  async login(credentials: T): Promise<AuthResult> {
+  async login<T extends AuthCredentials>(authAdapter: AuthPort<T>, credentials: T): Promise<AuthResult> {
     console.log('[AuthUsecase] Login initiated');
     
     try {
-      const user = await this.authAdapter.authenticate(credentials);
+      const user = await authAdapter.authenticate(credentials);
       
       if (user) {
         this.storageAdapter.setItem(STORAGE_KEYS.USER_ID, user.id);

@@ -5,8 +5,8 @@ import { LocalStorageAdapter } from './LocalStorageAdapter.js';
 import { AuthResult } from './types.js';
 
 export class App {
-  private pwdUsecase: AuthUsecase<PwdCredentials>;
-  private oauthUsecase: AuthUsecase<OAuthCredentials>;
+  private authUsecase: AuthUsecase;
+  private pwdAdapter: PwdAdapter;
   private oauthAdapter: OAuthAdapter;
   private oauthPromiseResolver: ((result: AuthResult) => void) | null = null;
   
@@ -14,9 +14,9 @@ export class App {
     // Initialization logging reduced for brevity
     
     const localStorageAdapter = new LocalStorageAdapter();
-    this.pwdUsecase = new AuthUsecase<PwdCredentials>(new PwdAdapter(), localStorageAdapter);
+    this.authUsecase = new AuthUsecase(localStorageAdapter);
+    this.pwdAdapter = new PwdAdapter();
     this.oauthAdapter = new OAuthAdapter();
-    this.oauthUsecase = new AuthUsecase<OAuthCredentials>(this.oauthAdapter, localStorageAdapter);
     
     // Set up the OAuth callback
     this.oauthAdapter.setOAuthCallback((provider, token) => {
@@ -28,7 +28,7 @@ export class App {
     console.log(`[App] Attempting password login for user: ${username}`);
     
     const credentials: PwdCredentials = { username, password };
-    const result = await this.pwdUsecase.login(credentials);
+    const result = await this.authUsecase.login(this.pwdAdapter, credentials);
     
     return result;
   }
@@ -45,7 +45,7 @@ export class App {
   
   private async handleOAuthCallback(provider: string, token: string): Promise<void> {
     const credentials: OAuthCredentials = { provider, token };
-    const result = await this.oauthUsecase.login(credentials);
+    const result = await this.authUsecase.login(this.oauthAdapter, credentials);
     
     if (this.oauthPromiseResolver) {
       this.oauthPromiseResolver(result);
@@ -54,11 +54,11 @@ export class App {
   }
   
   logout(): void {
-    this.pwdUsecase.logout();
+    this.authUsecase.logout();
   }
   
   getCurrentUserId(): string | null {
-    const userId = this.pwdUsecase.getCurrentUserId();
+    const userId = this.authUsecase.getCurrentUserId();
     return userId;
   }
 }
