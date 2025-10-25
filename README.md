@@ -4,15 +4,30 @@ This is a minimalistic teaching project demonstrating a login form with password
 
 ## Project Structure
 
-- [User.ts](file:///Users/tig/coding/qoder-proj/User.ts) - Domain entity representing a user
-- [AuthPort.ts](file:///Users/tig/coding/qoder-proj/AuthPort.ts) - Interface (port) for authentication adapters
-- [PwdAdapter.ts](file:///Users/tig/coding/qoder-proj/PwdAdapter.ts) - Adapter for password-based authentication
-- [OAuthAdapter.ts](file:///Users/tig/coding/qoder-proj/OAuthAdapter.ts) - Adapter for OAuth-based authentication
-- [AuthUsecase.ts](file:///Users/tig/coding/qoder-proj/AuthUsecase.ts) - Core business logic for authentication
-- [App.ts](file:///Users/tig/coding/qoder-proj/App.ts) - Main application that wires everything together
-- [index.html](file:///Users/tig/coding/qoder-proj/index.html) - Frontend UI demonstrating the login functionality
-- [test.html](file:///Users/tig/coding/qoder-proj/test.html) - Test runner for the authentication use case
-- [AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/AuthUsecase.test.ts) - Unit tests for the core authentication logic
+The project follows hexagonal architecture principles with a clear separation of concerns:
+
+```
+src/
+├── app/                       # Application Layer (Use Cases)
+│   ├── AuthUsecase.ts        # Core business logic for authentication
+│   └── AuthUsecase.test.ts   # Unit tests for the core authentication logic
+│
+├── domain/                    # Core Domain Logic and Ports
+│   ├── ports/
+│   │   ├── AuthPort.ts       # Interface (port) for authentication adapters
+│   │   └── StoragePort.ts    # Interface (port) for storage adapters
+│   ├── model/
+│   │   └── User.ts           # Domain entity representing a user
+│   └── types.ts              # Domain types and constants
+│
+└── adapters/                  # Infrastructure Layer (Adapters)
+    ├── PwdAdapter.ts          # Adapter for password-based authentication
+    ├── OAuthAdapter.ts        # Adapter for OAuth-based authentication
+    └── LocalStorageAdapter.ts # Adapter for browser localStorage
+
+App.ts                         # Composition root - wires everything together
+index.html                     # Frontend UI demonstrating the login functionality
+```
 
 ## Key Concepts Demonstrated
 
@@ -54,7 +69,7 @@ npm test
 
 ## Testing
 
-The unit tests in [AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/AuthUsecase.test.ts) verify that:
+The unit tests in [src/app/AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/src/app/AuthUsecase.test.ts) verify that:
 - User ID is saved to storage on successful authentication
 - User ID is not saved on failed authentication
 - User ID is removed from storage on logout

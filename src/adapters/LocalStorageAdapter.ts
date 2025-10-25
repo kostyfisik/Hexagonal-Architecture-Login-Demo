@@ -1,4 +1,4 @@
-import { StoragePort } from './StoragePort.js';
+import { StoragePort } from '../domain/ports/StoragePort.js';
 
 export class LocalStorageAdapter implements StoragePort {
   getItem(key: string): string | null {

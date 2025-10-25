@@ -12,7 +12,7 @@ global.localStorage = dom.window.localStorage;
 
 async function runTests() {
     try {
-        const testModule = await import('file://' + process.cwd() + '/dist/AuthUsecase.test.js');
+        const testModule = await import('file://' + process.cwd() + '/dist/src/app/AuthUsecase.test.js');
 
         if (testModule.testAuthUsecase) {
             console.log('Running AuthUsecase tests...\n');

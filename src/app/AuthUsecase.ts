@@ -1,6 +1,6 @@
-import { AuthPort, AuthCredentials } from './AuthPort.js';
-import { StoragePort } from './StoragePort.js';
-import { AuthResult, STORAGE_KEYS } from './types.js';
+import { AuthPort, AuthCredentials } from '../domain/ports/AuthPort.js';
+import { StoragePort } from '../domain/ports/StoragePort.js';
+import { AuthResult, STORAGE_KEYS } from '../domain/types.js';
 
 export class AuthUsecase {
   constructor(private storageAdapter: StoragePort) {}

@@ -1,6 +1,6 @@
-import { AuthPort, AuthCredentials } from './AuthPort.js';
-import { User } from './User.js';
-import { MOCK_CREDENTIALS } from './types.js';
+import { AuthPort, AuthCredentials } from '../domain/ports/AuthPort.js';
+import { User } from '../domain/model/User.js';
+import { MOCK_CREDENTIALS } from '../domain/types.js';
 
 export interface PwdCredentials extends AuthCredentials {
   username: string;

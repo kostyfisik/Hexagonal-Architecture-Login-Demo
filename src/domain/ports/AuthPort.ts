@@ -1,4 +1,4 @@
-import { User } from './User.js';
+import { User } from '../model/User.js';
 
 export interface AuthCredentials {
   // Base interface for authentication credentials

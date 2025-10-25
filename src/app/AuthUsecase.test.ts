@@ -1,8 +1,8 @@
 import { AuthUsecase } from './AuthUsecase.js';
-import { AuthPort, AuthCredentials } from './AuthPort.js';
-import { StoragePort } from './StoragePort.js';
-import { User } from './User.js';
-import { AuthResult } from './types.js';
+import { AuthPort, AuthCredentials } from '../domain/ports/AuthPort.js';
+import { StoragePort } from '../domain/ports/StoragePort.js';
+import { User } from '../domain/model/User.js';
+import { AuthResult } from '../domain/types.js';
 
 class MockAuthAdapter implements AuthPort<AuthCredentials> {
   private shouldSucceed: boolean;

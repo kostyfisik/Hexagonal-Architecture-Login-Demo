@@ -1,8 +1,8 @@
-import { AuthUsecase } from './AuthUsecase.js';
-import { PwdAdapter, PwdCredentials } from './PwdAdapter.js';
-import { OAuthAdapter, OAuthCredentials } from './OAuthAdapter.js';
-import { LocalStorageAdapter } from './LocalStorageAdapter.js';
-import { AuthResult } from './types.js';
+import { AuthUsecase } from './src/app/AuthUsecase.js';
+import { PwdAdapter, PwdCredentials } from './src/adapters/PwdAdapter.js';
+import { OAuthAdapter, OAuthCredentials } from './src/adapters/OAuthAdapter.js';
+import { LocalStorageAdapter } from './src/adapters/LocalStorageAdapter.js';
+import { AuthResult } from './src/domain/types.js';
 
 export class App {
   private authUsecase: AuthUsecase;
