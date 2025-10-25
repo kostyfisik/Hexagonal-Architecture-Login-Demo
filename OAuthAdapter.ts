@@ -8,50 +8,36 @@ export interface OAuthCredentials extends AuthCredentials {
 }
 
 export class OAuthAdapter implements AuthPort<OAuthCredentials> {
-  private callbackUrl: string;
-  private oauthCallback?: (provider: string, token: string) => void;
-  
   constructor() {
-    this.callbackUrl = window.location.origin + window.location.pathname + '?oauth_callback=1';
+    // Constructor simplified as callbackUrl and oauthCallback are no longer needed
   }
   
   async authenticate(credentials: OAuthCredentials): Promise<User | null> {
+    console.log(`[OAuthAdapter] Initiating OAuth flow for ${credentials.provider}`);
     
-    if (credentials.provider === 'google' && credentials.token === MOCK_CREDENTIALS.GOOGLE_TOKEN) {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      return {
-        id: 'oauth-user-456',
-        username: 'oauthuser',
-        email: 'oauthuser@gmail.com'
-      };
-    }
-    
-    return null;
+    // This promise now wraps the entire simulated flow
+    return new Promise((resolve) => {
+      // 1. Simulate redirecting to the provider
+      setTimeout(() => {
+        // 2. Simulate the callback from the provider with a token
+        const token = MOCK_CREDENTIALS.GOOGLE_TOKEN;
+
+        // 3. Simulate validating the token and getting user info
+        if (credentials.provider === 'google' && token) {
+          const user: User = {
+            id: 'oauth-user-456',
+            username: 'oauthuser',
+            email: 'oauthuser@gmail.com'
+          };
+          resolve(user);
+        } else {
+          resolve(null);
+        }
+      }, 1000);
+    });
   }
   
-  /**
-   * Set the callback function to be called when OAuth flow completes
-   */
-  setOAuthCallback(callback: (provider: string, token: string) => void): void {
-    this.oauthCallback = callback;
-  }
+
   
-  initiateOAuthFlow(provider: string): void {
-    console.log(`[OAuthAdapter] Initiating OAuth flow for ${provider}`);
-    
-    setTimeout(() => {
-      this.simulateOAuthCallback(provider);
-    }, 1000);
-  }
-  
-  private simulateOAuthCallback(provider: string): void {
-    if (this.oauthCallback) {
-      this.oauthCallback(provider, MOCK_CREDENTIALS.GOOGLE_TOKEN);
-    }
-  }
-  
-  getCallbackUrl(): string {
-    return this.callbackUrl;
-  }
+
 }

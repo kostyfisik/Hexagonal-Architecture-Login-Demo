@@ -8,7 +8,6 @@ export class App {
   private authUsecase: AuthUsecase;
   private pwdAdapter: PwdAdapter;
   private oauthAdapter: OAuthAdapter;
-  private oauthPromiseResolver: ((result: AuthResult) => void) | null = null;
   
   constructor() {
     // Initialization logging reduced for brevity
@@ -17,11 +16,6 @@ export class App {
     this.authUsecase = new AuthUsecase(localStorageAdapter);
     this.pwdAdapter = new PwdAdapter();
     this.oauthAdapter = new OAuthAdapter();
-    
-    // Set up the OAuth callback
-    this.oauthAdapter.setOAuthCallback((provider, token) => {
-      this.handleOAuthCallback(provider, token);
-    });
   }
   
   async pwdLogin(username: string, password: string): Promise<AuthResult> {
@@ -36,22 +30,13 @@ export class App {
   async oauthLogin(provider: string): Promise<AuthResult> {
     console.log(`[App] Starting OAuth login process for provider: ${provider}`);
     
-    this.oauthAdapter.initiateOAuthFlow(provider);
-    
-    return new Promise((resolve) => {
-      this.oauthPromiseResolver = resolve;
-    });
-  }
-  
-  private async handleOAuthCallback(provider: string, token: string): Promise<void> {
-    const credentials: OAuthCredentials = { provider, token };
+    const credentials: OAuthCredentials = { provider };
     const result = await this.authUsecase.login(this.oauthAdapter, credentials);
     
-    if (this.oauthPromiseResolver) {
-      this.oauthPromiseResolver(result);
-      this.oauthPromiseResolver = null;
-    }
+    return result;
   }
+  
+
   
   logout(): void {
     this.authUsecase.logout();
