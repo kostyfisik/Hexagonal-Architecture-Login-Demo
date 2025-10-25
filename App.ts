@@ -1,6 +1,7 @@
 import { AuthUsecase } from './AuthUsecase.js';
 import { PwdAdapter, PwdCredentials } from './PwdAdapter.js';
 import { OAuthAdapter, OAuthCredentials } from './OAuthAdapter.js';
+import { LocalStorageAdapter } from './LocalStorageAdapter.js';
 import { AuthResult } from './types.js';
 
 export class App {
@@ -12,9 +13,10 @@ export class App {
   constructor() {
     // Initialization logging reduced for brevity
     
-    this.pwdUsecase = new AuthUsecase<PwdCredentials>(new PwdAdapter());
+    const localStorageAdapter = new LocalStorageAdapter();
+    this.pwdUsecase = new AuthUsecase<PwdCredentials>(new PwdAdapter(), localStorageAdapter);
     this.oauthAdapter = new OAuthAdapter();
-    this.oauthUsecase = new AuthUsecase<OAuthCredentials>(this.oauthAdapter);
+    this.oauthUsecase = new AuthUsecase<OAuthCredentials>(this.oauthAdapter, localStorageAdapter);
     
     // Set up the OAuth callback
     this.oauthAdapter.setOAuthCallback((provider, token) => {

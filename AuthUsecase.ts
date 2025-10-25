@@ -1,8 +1,12 @@
 import { AuthPort, AuthCredentials } from './AuthPort.js';
+import { StoragePort } from './StoragePort.js';
 import { AuthResult, STORAGE_KEYS } from './types.js';
 
 export class AuthUsecase<T extends AuthCredentials> {
-  constructor(private authAdapter: AuthPort<T>) {}
+  constructor(
+    private authAdapter: AuthPort<T>,
+    private storageAdapter: StoragePort
+  ) {}
   
   async login(credentials: T): Promise<AuthResult> {
     console.log('[AuthUsecase] Login initiated');
@@ -11,7 +15,7 @@ export class AuthUsecase<T extends AuthCredentials> {
       const user = await this.authAdapter.authenticate(credentials);
       
       if (user) {
-        localStorage.setItem(STORAGE_KEYS.USER_ID, user.id);
+        this.storageAdapter.setItem(STORAGE_KEYS.USER_ID, user.id);
         return { success: true, userId: user.id };
       } else {
         return { success: false, error: 'Invalid credentials' };
@@ -23,11 +27,11 @@ export class AuthUsecase<T extends AuthCredentials> {
   }
   
   logout(): void {
-    localStorage.removeItem(STORAGE_KEYS.USER_ID);
+    this.storageAdapter.removeItem(STORAGE_KEYS.USER_ID);
   }
   
   getCurrentUserId(): string | null {
-    const userId = localStorage.getItem(STORAGE_KEYS.USER_ID);
+    const userId = this.storageAdapter.getItem(STORAGE_KEYS.USER_ID);
     return userId;
   }
 }

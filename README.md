@@ -55,9 +55,9 @@ npm test
 ## Testing
 
 The unit tests in [AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/AuthUsecase.test.ts) verify that:
-- User ID is saved to localStorage on successful authentication
+- User ID is saved to storage on successful authentication
 - User ID is not saved on failed authentication
-- User ID is removed from localStorage on logout
-- Current user ID can be retrieved from localStorage
+- User ID is removed from storage on logout
+- Current user ID can be retrieved from storage
 
 All backend calls are mocked, and the OAuth redirect flow is simulated.
