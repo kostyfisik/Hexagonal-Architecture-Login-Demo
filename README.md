@@ -43,36 +43,60 @@ index.html                     # Frontend UI demonstrating the login functionali
    npm install
    ```
 
-2. Build the project:
+2. Start the development server:
    ```
-   npm run build
-   ```
-
-3. Start the web server:
-   ```
-   npm start
+   npm run dev
    ```
 
-4. Open your browser and navigate to http://localhost:3000
+3. Open your browser and navigate to http://localhost:5173
 
-5. Use username "admin" and password "password" for password login
+4. Use username "admin" and password "password" for password login
 
-6. Use the "Login with Google" button to simulate OAuth login
+5. Use the "Login with Google" button to simulate OAuth login
+
+## Building for Production
+
+Build the project for production:
+```
+npm run build
+```
+
+Preview the production build:
+```
+npm run preview
+```
 
 ## Running Tests
 
-### Console Tests
-Run tests in the console:
+### Run Tests Once
+```
+npm run test:run
+```
+
+### Watch Mode (for development)
 ```
 npm test
 ```
 
+### Interactive UI Mode
+```
+npm run test:ui
+```
+
 ## Testing
 
-The unit tests in [src/app/AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/src/app/AuthUsecase.test.ts) verify that:
+The project uses **Vitest** for unit testing. Tests are located in [src/app/AuthUsecase.test.ts](file:///Users/tig/coding/qoder-proj/src/app/AuthUsecase.test.ts) and verify:
 - User ID is saved to storage on successful authentication
 - User ID is not saved on failed authentication
 - User ID is removed from storage on logout
 - Current user ID can be retrieved from storage
+- Null is returned when no user is logged in
 
 All backend calls are mocked, and the OAuth redirect flow is simulated.
+
+## Technology Stack
+
+- **Vite** - Fast build tool and development server
+- **Vitest** - Modern testing framework with Vite integration
+- **TypeScript** - Type-safe JavaScript
+- **Happy-DOM** - Lightweight DOM implementation for testing
